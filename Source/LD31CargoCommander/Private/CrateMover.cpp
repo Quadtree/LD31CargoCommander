@@ -3,6 +3,11 @@
 #include "LD31CargoCommander.h"
 #include "CrateMover.h"
 
+ACrateMover::ACrateMover(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
+
 void ACrateMover::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);

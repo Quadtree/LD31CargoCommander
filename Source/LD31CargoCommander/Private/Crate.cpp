@@ -41,6 +41,13 @@ void ACrate::Tick(float DeltaSeconds)
 			for (auto j = TActorIterator< ACrateMover >(GetWorld()); j; ++j)
 			{
 				Destructible->ChunkInfos[chunkIdx].Actor->addForce(physx::PxVec3(j->Movement.X * DeltaSeconds, j->Movement.Y * DeltaSeconds, j->Movement.Z * DeltaSeconds), PxForceMode::eVELOCITY_CHANGE);
+
+				FVector rotMove = pos;
+				rotMove = FRotator(0, 90, 0).RotateVector(rotMove);
+
+				rotMove *= j->Spin;
+
+				//Destructible->ChunkInfos[chunkIdx].Actor->addForce(physx::PxVec3(rotMove.X * DeltaSeconds, rotMove.Y * DeltaSeconds, rotMove.Z * DeltaSeconds), PxForceMode::eVELOCITY_CHANGE);
 			}
 
 		}
