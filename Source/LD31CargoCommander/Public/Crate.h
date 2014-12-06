@@ -9,11 +9,13 @@
  * 
  */
 UCLASS(Abstract)
-class LD31CARGOCOMMANDER_API ACrate : public AStaticMeshActor
+class LD31CARGOCOMMANDER_API ACrate : public AActor
 {
 	GENERATED_BODY()
+public:
+	ACrate(const FObjectInitializer& ObjectInitializer);
 	
-	
-	
+	UPROPERTY(VisibleAnywhere, Category = Mesh)
+	class UDestructibleComponent* Destructible;
 	
 };
