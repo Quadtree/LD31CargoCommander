@@ -31,25 +31,30 @@ void ACrate::Tick(float DeltaSeconds)
 		int32 chunkIdx = Destructible->BoneIdxToChunkIdx(Destructible->GetBoneIndex(*i));
 		if (Destructible->ChunkInfos.Num() > chunkIdx && Destructible->ChunkInfos[chunkIdx].Actor)
 		{
+			physx::PxVec3 force;
+
 			if (pos.Y < -4700)
 			{
-				//UE_LOG(LLog, Display, TEXT("FOOORCE! %s"), *FString::SanitizeFloat(980 * DeltaSeconds));
-				
-				Destructible->ChunkInfos[chunkIdx].Actor->addForce(physx::PxVec3(0, 0, 980 * DeltaSeconds), PxForceMode::eVELOCITY_CHANGE);
+				force += physx::PxVec3(0, 0, 980 * DeltaSeconds);
 			}
 
 			for (auto j = TActorIterator< ACrateMover >(GetWorld()); j; ++j)
 			{
-				Destructible->ChunkInfos[chunkIdx].Actor->addForce(physx::PxVec3(j->Movement.X * DeltaSeconds, j->Movement.Y * DeltaSeconds, j->Movement.Z * DeltaSeconds), PxForceMode::eVELOCITY_CHANGE);
+				force += physx::PxVec3(j->Movement.X * DeltaSeconds, j->Movement.Y * DeltaSeconds, j->Movement.Z * DeltaSeconds);
+
+				UE_LOG(LLog, Display, TEXT("FOOORCE! %s %s %s"), *FString::SanitizeFloat(force.x), *FString::SanitizeFloat(force.y), *FString::SanitizeFloat(force.z));
 
 				FVector rotMove = pos;
 				rotMove = FRotator(0, 90, 0).RotateVector(rotMove);
 
 				rotMove *= j->Spin;
 
-				//Destructible->ChunkInfos[chunkIdx].Actor->addForce(physx::PxVec3(rotMove.X * DeltaSeconds, rotMove.Y * DeltaSeconds, rotMove.Z * DeltaSeconds), PxForceMode::eVELOCITY_CHANGE);
+				force += physx::PxVec3(rotMove.X * DeltaSeconds, rotMove.Y * DeltaSeconds, rotMove.Z * DeltaSeconds);
 			}
 
+			Destructible->ChunkInfos[chunkIdx].Actor->addForce(force, PxForceMode::eVELOCITY_CHANGE);
+
+			
 		}
 	}
 

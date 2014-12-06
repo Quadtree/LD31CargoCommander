@@ -6,13 +6,19 @@
 ACrateMover::ACrateMover(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
+	LifeSpan = 10;
 }
 
 void ACrateMover::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	
+
 	LifeSpan -= DeltaSeconds;
 
-	if (LifeSpan <= 0) Destroy();
+	if (LifeSpan <= 0){
+		UE_LOG(LLog, Display, TEXT("EOL %s"), *FString::SanitizeFloat(LifeSpan));
+		Destroy();
+	}
 }
