@@ -34,5 +34,8 @@ public:
 
 	UFUNCTION()
 	void StopGrabbing();
+
+	UPROPERTY(EditAnywhere, Category = Grab)
+	float GrabPower;
 };
 

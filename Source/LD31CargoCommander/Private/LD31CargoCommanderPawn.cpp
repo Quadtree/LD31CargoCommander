@@ -34,6 +34,7 @@ ALD31CargoCommanderPawn::ALD31CargoCommanderPawn(const FObjectInitializer& Objec
 	GetCharacterMovement()->AirControl = 0.2f;*/
 
 	IsGrabbing = false;
+	GrabPower = 10;
 }
 
 void ALD31CargoCommanderPawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
@@ -98,9 +99,9 @@ void ALD31CargoCommanderPawn::Tick(float DeltaSeconds)
 
 		float dp = FVector::DotProduct(angular.RotateVector(MoveDirection), curVector);
 
-		//UE_LOG(LLog, Display, TEXT("DP %s"), *FString::SanitizeFloat(dp));
+		//UE_LOG(LLog, Display, TEXT("DP %s"), *FString::SanitizeFloat(FVector::DotProduct(MoveDirection, curVector)));
 
-		if (abs(dp) > 0.25f){
+		if (FVector::DotProduct(MoveDirection, curVector) < 0.9f){
 			if (dp > 0)
 				rot.Yaw += DeltaSeconds * 500;
 			else
@@ -113,6 +114,30 @@ void ALD31CargoCommanderPawn::Tick(float DeltaSeconds)
 	}
 
 	RootComponent->SetRelativeRotation(rot);
+
+	if (IsGrabbing)
+	{
+		TArray<FHitResult> res;
+		FCollisionQueryParams params;
+		FCollisionObjectQueryParams oParams;
+		params.AddIgnoredActor(this);
+
+		//UE_LOG(LLog, Display, TEXT("SCAN!!"));
+
+		if (GetWorld()->LineTraceMulti(res, GetActorLocation() + FVector(0, 0, 100), GetActorLocation() + FVector(0, 0, 100) + (GetActorForwardVector() * 800), params, oParams))
+		{
+			for (auto i = res.CreateIterator(); i; ++i)
+			{
+				//UE_LOG(LLog, Display, TEXT("HIT!!"));
+
+				if (i->Actor.IsValid() && Cast<UPrimitiveComponent>(i->Actor->GetRootComponent()))
+				{
+					//UE_LOG(LLog, Display, TEXT("DRAG!!"));
+					Cast<UPrimitiveComponent>(i->Actor->GetRootComponent())->AddForceAtLocation(GetActorForwardVector() * -GrabPower, i->ImpactPoint);
+				}
+			}
+		}
+	}
 }
 
 void ALD31CargoCommanderPawn::StartGrabbing()
