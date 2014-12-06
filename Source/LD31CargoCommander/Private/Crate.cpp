@@ -4,6 +4,8 @@
 #include "Crate.h"
 #include "Components/DestructibleComponent.h"
 #include "PhysXIncludes.h"
+#include "CrateMover.h"
+#include "EngineUtils.h"
 
 ACrate::ACrate(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -26,15 +28,21 @@ void ACrate::Tick(float DeltaSeconds)
 
 		FVector pos = Destructible->GetBoneLocation(*i);
 
-		if (pos.Y < -4700)
+		int32 chunkIdx = Destructible->BoneIdxToChunkIdx(Destructible->GetBoneIndex(*i));
+		if (Destructible->ChunkInfos.Num() > chunkIdx && Destructible->ChunkInfos[chunkIdx].Actor)
 		{
-			int32 chunkIdx = Destructible->BoneIdxToChunkIdx(Destructible->GetBoneIndex(*i));
-
-			if (Destructible->ChunkInfos.Num() > chunkIdx)
+			if (pos.Y < -4700)
 			{
 				//UE_LOG(LLog, Display, TEXT("FOOORCE! %s"), *FString::SanitizeFloat(980 * DeltaSeconds));
+				
 				Destructible->ChunkInfos[chunkIdx].Actor->addForce(physx::PxVec3(0, 0, 980 * DeltaSeconds), PxForceMode::eVELOCITY_CHANGE);
 			}
+
+			for (auto j = TActorIterator< ACrateMover >(GetWorld()); j; ++j)
+			{
+				Destructible->ChunkInfos[chunkIdx].Actor->addForce(physx::PxVec3(j->Movement.X * DeltaSeconds, j->Movement.Y * DeltaSeconds, j->Movement.Z * DeltaSeconds), PxForceMode::eVELOCITY_CHANGE);
+			}
+
 		}
 	}
 
