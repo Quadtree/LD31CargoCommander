@@ -18,4 +18,5 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Mesh)
 	class UDestructibleComponent* Destructible;
 	
+	virtual void Tick(float DeltaSeconds) override;
 };
