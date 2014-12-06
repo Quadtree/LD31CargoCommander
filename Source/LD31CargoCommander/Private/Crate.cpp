@@ -52,6 +52,15 @@ void ACrate::Tick(float DeltaSeconds)
 				force += physx::PxVec3(rotMove.X * DeltaSeconds, rotMove.Y * DeltaSeconds, rotMove.Z * DeltaSeconds);
 			}
 
+			if (force.magnitude() > 0.001f)
+			{
+				if (Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity().magnitude() < 0.001f)
+				{
+					UE_LOG(LLog, Display, TEXT("AWAKEN!!"));
+					Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(PxVec3(0, 0, 100.f));
+				}
+			}
+
 			Destructible->ChunkInfos[chunkIdx].Actor->addForce(force, PxForceMode::eVELOCITY_CHANGE);
 
 			

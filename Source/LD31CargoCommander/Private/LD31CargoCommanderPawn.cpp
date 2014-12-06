@@ -4,6 +4,9 @@
 #include "LD31CargoCommanderPawn.h"
 #include "LD31CargoCommanderProjectile.h"
 #include "TimerManager.h"
+#include "Crate.h"
+#include "Components/DestructibleComponent.h"
+#include "PhysXIncludes.h"
 
 const FName ALD31CargoCommanderPawn::MoveForwardBinding("MoveForward");
 const FName ALD31CargoCommanderPawn::MoveRightBinding("MoveRight");
@@ -101,7 +104,7 @@ void ALD31CargoCommanderPawn::Tick(float DeltaSeconds)
 
 		//UE_LOG(LLog, Display, TEXT("DP %s"), *FString::SanitizeFloat(FVector::DotProduct(MoveDirection, curVector)));
 
-		if (FVector::DotProduct(MoveDirection, curVector) < 0.9f){
+		if (FVector::DotProduct(MoveDirection, curVector) < 0.98f){
 			if (dp > 0)
 				rot.Yaw += DeltaSeconds * 500;
 			else
@@ -135,6 +138,31 @@ void ALD31CargoCommanderPawn::Tick(float DeltaSeconds)
 					UE_LOG(LLog, Display, TEXT("DRAG!!"));
 					//Cast<UPrimitiveComponent>(i->Actor->GetRootComponent())->AddImpulseAtLocation(GetActorForwardVector() * -GrabPower, i->ImpactPoint);
 					Cast<UPrimitiveComponent>(i->Actor->GetRootComponent())->AddRadialForce(GetActorLocation(), 800, -GrabPower, ERadialImpulseFalloff::RIF_Constant);
+
+					if (i->Actor->FindComponentByClass<UDestructibleComponent>())
+					{
+						UDestructibleComponent* Destructible = i->Actor->FindComponentByClass<UDestructibleComponent>();
+						TArray<FName> bones;
+
+						Destructible->GetBoneNames(bones);
+
+						for (auto i = bones.CreateIterator(); i; ++i)
+						{
+							FVector pos = Destructible->GetBoneLocation(*i);
+
+							int32 chunkIdx = Destructible->BoneIdxToChunkIdx(Destructible->GetBoneIndex(*i));
+							if (Destructible->ChunkInfos.Num() > chunkIdx && Destructible->ChunkInfos[chunkIdx].Actor)
+							{
+								
+								if (Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity().magnitude() < 0.001f)
+								{
+									UE_LOG(LLog, Display, TEXT("AWAKEN!!"));
+									Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(PxVec3(0, 0, 100.f));
+								}
+								
+							}
+						}
+					}
 				}
 			}
 		}
