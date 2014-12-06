@@ -60,7 +60,7 @@ void ALD31CargoCommanderPawn::Tick(float DeltaSeconds)
 	// Calculate  movement
 	//const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
 
-	UE_LOG(LLog, Display, TEXT("%s"), *GetActorLocation().ToString());
+	//UE_LOG(LLog, Display, TEXT("%s"), *GetActorLocation().ToString());
 
 	// If non-zero size, move this actor
 	if (MoveDirection.SizeSquared() > 0.0f)
@@ -83,9 +83,36 @@ void ALD31CargoCommanderPawn::Tick(float DeltaSeconds)
 		}*/
 	}
 
-	RootComponent->SetRelativeRotation(FRotator::ZeroRotator);
+	FRotator rot = RootComponent->GetRelativeTransform().Rotator();
+	rot.Pitch = 0;
+	rot.Roll = 0;
+	
 	ShipMeshComponent->SetPhysicsLinearVelocity(ShipMeshComponent->GetPhysicsLinearVelocity() * FVector(0.97f, 0.97f, 1.f));
 	ShipMeshComponent->SetPhysicsAngularVelocity(FVector::ZeroVector);
+
+	if (!IsGrabbing && MoveDirection.SizeSquared() > 0.2f)
+	{
+		FVector curVector = GetActorForwardVector();
+
+		FRotator angular = FRotator(0, -90, 0);
+
+		float dp = FVector::DotProduct(angular.RotateVector(MoveDirection), curVector);
+
+		//UE_LOG(LLog, Display, TEXT("DP %s"), *FString::SanitizeFloat(dp));
+
+		if (abs(dp) > 0.25f){
+			if (dp > 0)
+				rot.Yaw += DeltaSeconds * 500;
+			else
+				rot.Yaw -= DeltaSeconds * 500;
+		}
+		else
+		{
+			rot.Yaw = MoveDirection.Rotation().Yaw;
+		}
+	}
+
+	RootComponent->SetRelativeRotation(rot);
 }
 
 void ALD31CargoCommanderPawn::StartGrabbing()
