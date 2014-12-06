@@ -10,7 +10,7 @@
 
 #include "EngineMinimal.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogLD31CargoCommander, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LLog, Log, All);
 
 
 #endif

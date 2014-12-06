@@ -5,5 +5,5 @@
 
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, LD31CargoCommander, "LD31CargoCommander" );
 
-DEFINE_LOG_CATEGORY(LogLD31CargoCommander)
+DEFINE_LOG_CATEGORY(LLog);
  
