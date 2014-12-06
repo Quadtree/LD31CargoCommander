@@ -17,6 +17,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, Category = Mesh)
 	class UDestructibleComponent* Destructible;
+
+	UPROPERTY(EditAnywhere, Category = Value)
+	int32 CrateValue;
 	
 	virtual void Tick(float DeltaSeconds) override;
 };
