@@ -15,14 +15,14 @@ ALD31CargoCommanderPawn::ALD31CargoCommanderPawn(const FObjectInitializer& Objec
 {	
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("/Game/Meshes/UFO.UFO"));
 	ShipMeshComponent = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("ShipMesh"));
-	ShipMeshComponent->AttachTo(RootComponent);
+	RootComponent = ShipMeshComponent;
 
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Movement
 	MoveSpeed = 1000.0f;
 
-	// Don't rotate when the controller rotates. Let that just affect the camera.
+	/*// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
@@ -31,7 +31,9 @@ ALD31CargoCommanderPawn::ALD31CargoCommanderPawn(const FObjectInitializer& Objec
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
-	GetCharacterMovement()->AirControl = 0.2f;
+	GetCharacterMovement()->AirControl = 0.2f;*/
+
+	IsGrabbing = false;
 }
 
 void ALD31CargoCommanderPawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
@@ -41,6 +43,9 @@ void ALD31CargoCommanderPawn::SetupPlayerInputComponent(class UInputComponent* I
 	// set up gameplay key bindings
 	InputComponent->BindAxis(MoveForwardBinding);
 	InputComponent->BindAxis(MoveRightBinding);
+
+	InputComponent->BindAction(TEXT("Grab"), EInputEvent::IE_Pressed, this, &ALD31CargoCommanderPawn::StartGrabbing);
+	InputComponent->BindAction(TEXT("Grab"), EInputEvent::IE_Released, this, &ALD31CargoCommanderPawn::StopGrabbing);
 }
 
 void ALD31CargoCommanderPawn::Tick(float DeltaSeconds)
@@ -53,14 +58,18 @@ void ALD31CargoCommanderPawn::Tick(float DeltaSeconds)
 	const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).ClampMaxSize(1.0f);
 
 	// Calculate  movement
-	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
+	//const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
 
 	UE_LOG(LLog, Display, TEXT("%s"), *GetActorLocation().ToString());
 
 	// If non-zero size, move this actor
-	if (Movement.SizeSquared() > 0.0f)
+	if (MoveDirection.SizeSquared() > 0.0f)
 	{
-		AddMovementInput(MoveDirection);
+		//AddMovementInput(MoveDirection);
+		ShipMeshComponent->AddForce(MoveDirection * MoveSpeed);
+
+		
+		
 
 		/*const FRotator NewRotation = Movement.Rotation();
 		FHitResult Hit(1.f);
@@ -73,5 +82,18 @@ void ALD31CargoCommanderPawn::Tick(float DeltaSeconds)
 			RootComponent->MoveComponent(Deflection, NewRotation, true);
 		}*/
 	}
+
+	RootComponent->SetRelativeRotation(FRotator::ZeroRotator);
+	ShipMeshComponent->SetPhysicsLinearVelocity(ShipMeshComponent->GetPhysicsLinearVelocity() * FVector(0.97f, 0.97f, 1.f));
+	ShipMeshComponent->SetPhysicsAngularVelocity(FVector::ZeroVector);
 }
 
+void ALD31CargoCommanderPawn::StartGrabbing()
+{
+	IsGrabbing = true;
+}
+
+void ALD31CargoCommanderPawn::StopGrabbing()
+{
+	IsGrabbing = false;
+}

@@ -5,7 +5,7 @@
 #include "LD31CargoCommanderPawn.generated.h"
 
 UCLASS(Blueprintable, Abstract)
-class ALD31CargoCommanderPawn : public ACharacter
+class ALD31CargoCommanderPawn : public APawn
 {
 	GENERATED_BODY()
 
@@ -25,5 +25,14 @@ public:
 	static const FName MoveRightBinding;
 	static const FName FireForwardBinding;
 	static const FName FireRightBinding;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool IsGrabbing;
+
+	UFUNCTION()
+	void StartGrabbing();
+
+	UFUNCTION()
+	void StopGrabbing();
 };
 
