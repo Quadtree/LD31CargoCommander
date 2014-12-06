@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{221CDDFF-442E-5C89-CA09-55A5DFD83C9D}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "LD31CargoCommander",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
