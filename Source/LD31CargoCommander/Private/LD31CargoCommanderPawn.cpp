@@ -122,18 +122,19 @@ void ALD31CargoCommanderPawn::Tick(float DeltaSeconds)
 		FCollisionObjectQueryParams oParams;
 		params.AddIgnoredActor(this);
 
-		//UE_LOG(LLog, Display, TEXT("SCAN!!"));
+		UE_LOG(LLog, Display, TEXT("SCAN!!"));
 
 		if (GetWorld()->LineTraceMulti(res, GetActorLocation() + FVector(0, 0, 100), GetActorLocation() + FVector(0, 0, 100) + (GetActorForwardVector() * 800), params, oParams))
 		{
 			for (auto i = res.CreateIterator(); i; ++i)
 			{
-				//UE_LOG(LLog, Display, TEXT("HIT!!"));
+				UE_LOG(LLog, Display, TEXT("HIT!!"));
 
 				if (i->Actor.IsValid() && Cast<UPrimitiveComponent>(i->Actor->GetRootComponent()))
 				{
-					//UE_LOG(LLog, Display, TEXT("DRAG!!"));
-					Cast<UPrimitiveComponent>(i->Actor->GetRootComponent())->AddForceAtLocation(GetActorForwardVector() * -GrabPower, i->ImpactPoint);
+					UE_LOG(LLog, Display, TEXT("DRAG!!"));
+					//Cast<UPrimitiveComponent>(i->Actor->GetRootComponent())->AddImpulseAtLocation(GetActorForwardVector() * -GrabPower, i->ImpactPoint);
+					Cast<UPrimitiveComponent>(i->Actor->GetRootComponent())->AddRadialForce(GetActorLocation(), 800, -GrabPower, ERadialImpulseFalloff::RIF_Constant);
 				}
 			}
 		}
