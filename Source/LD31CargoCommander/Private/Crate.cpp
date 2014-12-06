@@ -32,8 +32,8 @@ void ACrate::Tick(float DeltaSeconds)
 
 			if (Destructible->ChunkInfos.Num() > chunkIdx)
 			{
-				UE_LOG(LLog, Display, TEXT("FOOORCE! %s"), *FString::FromInt(chunkIdx));
-				Destructible->ChunkInfos[chunkIdx].Actor->addForce(physx::PxVec3(0, 0, 980 * Destructible->ChunkInfos[chunkIdx].Actor->getMass() * DeltaSeconds));
+				//UE_LOG(LLog, Display, TEXT("FOOORCE! %s"), *FString::SanitizeFloat(980 * DeltaSeconds));
+				Destructible->ChunkInfos[chunkIdx].Actor->addForce(physx::PxVec3(0, 0, 980 * DeltaSeconds), PxForceMode::eVELOCITY_CHANGE);
 			}
 		}
 	}
