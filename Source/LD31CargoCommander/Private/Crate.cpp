@@ -35,7 +35,10 @@ void ACrate::Tick(float DeltaSeconds)
 
 			if (pos.Y < -4700)
 			{
-				force += physx::PxVec3(0, 0, 980 * DeltaSeconds);
+				PxVec3 vel = Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity();
+				vel.z = 0;
+
+				Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(vel);
 			}
 
 			for (auto j = TActorIterator< ACrateMover >(GetWorld()); j; ++j)
