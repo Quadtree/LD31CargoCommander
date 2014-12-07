@@ -6,10 +6,19 @@
 #include "Crate.h"
 #include "Components/DestructibleComponent.h"
 #include "PhysXIncludes.h"
+#include "LD31CargoCommanderGameMode.h"
 
 void ASuspensorField::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	ALD31CargoCommanderGameMode* gm = Cast<ALD31CargoCommanderGameMode>(GetWorld()->GetAuthGameMode());
+
+	if (!gm || !gm->GameRunning)
+	{
+		IsOn = false;
+		return;
+	}
 
 	FVector delta = Destination - GetActorLocation();
 	float moveAmt = MoveSpeed * DeltaSeconds;

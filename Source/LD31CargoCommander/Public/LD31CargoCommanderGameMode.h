@@ -34,6 +34,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = Hazards)
 	float AvgHazardDuration;
 
+	UPROPERTY(BlueprintReadWrite, Category = Game)
+	bool GameRunning;
+
 	TArray<FString> Messages;
 };
 

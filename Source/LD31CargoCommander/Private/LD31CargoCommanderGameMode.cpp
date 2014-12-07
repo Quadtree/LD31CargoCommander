@@ -17,11 +17,14 @@ ALD31CargoCommanderGameMode::ALD31CargoCommanderGameMode(const FObjectInitialize
 	HazardSpinPower = 0.001f;
 	HazardPushPower = 700;
 	AvgHazardDuration = 7;
+	GameRunning = false;
 }
 
 void ALD31CargoCommanderGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	if (!GameRunning) return;
 
 	TimeLeft -= DeltaSeconds;
 
