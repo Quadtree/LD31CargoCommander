@@ -43,6 +43,8 @@ void ACrate::Tick(float DeltaSeconds)
 				UE_LOG(LLog, Display, TEXT("pos! %s"), *pos.ToCompactString());
 			}
 
+			
+
 			for (auto j = TActorIterator< ACrateMover >(GetWorld()); j; ++j)
 			{
 				force += physx::PxVec3(j->Movement.X * DeltaSeconds, j->Movement.Y * DeltaSeconds, j->Movement.Z * DeltaSeconds);
@@ -68,7 +70,7 @@ void ACrate::Tick(float DeltaSeconds)
 
 			Destructible->ChunkInfos[chunkIdx].Actor->addForce(force, PxForceMode::eVELOCITY_CHANGE);
 
-			
+			if (pos.Y < -10000) Destroy();
 		}
 	}
 
@@ -82,4 +84,26 @@ void ACrate::Tick(float DeltaSeconds)
 	{
 		Destructible->SetEnableGravity(true);
 	}
+}
+
+int32 ACrate::GetValue()
+{
+	int32 pieces = 0;
+
+	TArray<FName> bones;
+
+	Destructible->GetBoneNames(bones);
+
+	for (auto i = bones.CreateIterator(); i; ++i)
+	{
+		int32 chunkIdx = Destructible->BoneIdxToChunkIdx(Destructible->GetBoneIndex(*i));
+		if (Destructible->ChunkInfos.Num() > chunkIdx && Destructible->ChunkInfos[chunkIdx].Actor)
+		{
+			pieces++;
+		}
+	}
+
+	UE_LOG(LLog, Display, TEXT("N %s"), *FString::FromInt(pieces));
+
+	return pieces == 2 ? CrateValue : 0;
 }

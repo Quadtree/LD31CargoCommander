@@ -12,8 +12,13 @@ UCLASS()
 class LD31CARGOCOMMANDER_API ALD31HUD : public AHUD
 {
 	GENERATED_BODY()
-	
-	
+public:
+
+	UFUNCTION(BlueprintPure, Category = Status)
+	int32 GetRemainingCrateValue();
+
+	UFUNCTION(BlueprintPure, Category = Status)
+	float GetTimeLeft();
 	
 	
 };

@@ -12,6 +12,9 @@ class ALD31CargoCommanderGameMode : public AGameMode
 
 public:
 	ALD31CargoCommanderGameMode(const FObjectInitializer& ObjectInitializer);
+
+	UPROPERTY(EditAnywhere, Category = Status)
+	float TimeLeft;
 };
 
 

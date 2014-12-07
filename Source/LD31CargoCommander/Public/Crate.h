@@ -22,4 +22,6 @@ public:
 	int32 CrateValue;
 	
 	virtual void Tick(float DeltaSeconds) override;
+
+	int32 GetValue();
 };
