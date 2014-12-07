@@ -40,15 +40,17 @@ void ALD31CargoCommanderGameMode::Tick(float DeltaSeconds)
 		{
 			ACrateMover* cm = GetWorld()->SpawnActor<ACrateMover>();
 
-			if (FMath::Rand() % 2 == 0)
-			{
-				cm->Spin = FMath::FRandRange(-HazardSpinPower, HazardSpinPower);
-				Messages.Add(TEXT("Pilot: Whoa! An asteroid!"));
-			}
-			else
+			//if (FMath::Rand() % 2 == 0)
+			//{
+			//	cm->Spin = FMath::FRandRange(-HazardSpinPower, HazardSpinPower);
+			//	Messages.Add(TEXT("Pilot: Whoa! An asteroid!"));
+			//}
+			//else
 			{
 				cm->Movement.X = FMath::FRandRange(-HazardPushPower, HazardPushPower);
 				cm->Movement.Y = FMath::FRandRange(-HazardPushPower, HazardPushPower);
+				cm->Movement.Normalize();
+				cm->Movement *= HazardPushPower;
 				Messages.Add(TEXT("Pilot: Whoops, wrong button!"));
 			}
 
