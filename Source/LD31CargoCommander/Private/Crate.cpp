@@ -37,12 +37,16 @@ void ACrate::Tick(float DeltaSeconds)
 				force.z = -980.f * DeltaSeconds;
 			}
 
+			float boost = 1;
+
+			if (Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity().magnitude() < 4) boost = 8;
+
 			for (auto j = TActorIterator< ACrateMover >(GetWorld()); j; ++j)
 			{
-				force += physx::PxVec3(j->Movement.X * DeltaSeconds, j->Movement.Y * DeltaSeconds, j->Movement.Z * DeltaSeconds);
+				force += physx::PxVec3(j->Movement.X * DeltaSeconds * boost, j->Movement.Y * DeltaSeconds * boost, 1000 * DeltaSeconds * boost);
 			}
 
-			UE_LOG(LLog, Display, TEXT("FORCE %s %s %s"), *FString::SanitizeFloat(force.x), *FString::SanitizeFloat(force.y), *FString::SanitizeFloat(force.z));
+			//UE_LOG(LLog, Display, TEXT("FORCE %s %s %s"), *FString::SanitizeFloat(force.x), *FString::SanitizeFloat(force.y), *FString::SanitizeFloat(force.z));
 
 			Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity() + force);
 
