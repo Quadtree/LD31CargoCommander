@@ -31,16 +31,18 @@ void ACrate::Tick(float DeltaSeconds)
 		int32 chunkIdx = Destructible->BoneIdxToChunkIdx(Destructible->GetBoneIndex(*i));
 		if (Destructible->ChunkInfos.Num() > chunkIdx && Destructible->ChunkInfos[chunkIdx].Actor)
 		{
-			physx::PxVec3 force;
+			physx::PxVec3 force(0,0,0);
 
-			if (pos.Y < -4700)
+			if (pos.Y > -4700)
 			{
-				PxVec3 vel = Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity();
-				vel.z = 0;
+				//PxVec3 vel = Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity();
+				//vel.z = 0;
 
-				Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(vel);
+				//Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(vel);
 
 				//UE_LOG(LLog, Display, TEXT("pos! %s"), *pos.ToCompactString());
+
+				force.z = -980.f * DeltaSeconds;
 			}
 
 			
@@ -51,24 +53,26 @@ void ACrate::Tick(float DeltaSeconds)
 
 				//UE_LOG(LLog, Display, TEXT("FOOORCE! %s %s %s"), *FString::SanitizeFloat(force.x), *FString::SanitizeFloat(force.y), *FString::SanitizeFloat(force.z));
 
-				FVector rotMove = pos;
+				/*FVector rotMove = pos;
 				rotMove = FRotator(0, 90, 0).RotateVector(rotMove);
 
 				rotMove *= j->Spin;
 
-				force += physx::PxVec3(rotMove.X * DeltaSeconds, rotMove.Y * DeltaSeconds, rotMove.Z * DeltaSeconds);
+				force += physx::PxVec3(rotMove.X * DeltaSeconds, rotMove.Y * DeltaSeconds, rotMove.Z * DeltaSeconds);*/
 			}
 
-			if (force.magnitude() > 0.001f)
+			/*if (force.magnitude() > 0.001f)
 			{
 				if (Destructible->ChunkInfos[chunkIdx].Actor && Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity().magnitude() < 0.001f)
 				{
 					//UE_LOG(LLog, Display, TEXT("AWAKEN!!"));
 					Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(PxVec3(0, 0, 100.f));
 				}
-			}
+			}*/
 
-			Destructible->ChunkInfos[chunkIdx].Actor->addForce(force, PxForceMode::eVELOCITY_CHANGE);
+			//Destructible->ChunkInfos[chunkIdx].Actor->addForce(force, PxForceMode::eVELOCITY_CHANGE);
+
+			Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity() + force);
 
 			if (pos.Y < -10000)
 			{
@@ -78,7 +82,7 @@ void ACrate::Tick(float DeltaSeconds)
 		}
 	}
 
-	Destructible->GetDestructibleMesh();
+	//Destructible->GetDestructibleMesh();
 
 	/*if (GetActorLocation().Y < -4700)
 	{

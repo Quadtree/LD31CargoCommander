@@ -29,7 +29,7 @@ void ALD31PlayerController::Tick(float DeltaSeconds)
 
 		sf->Destination = dest;
 
-		UE_LOG(LLog, Display, TEXT("Dest %s"), *dest.ToCompactString());
+		//UE_LOG(LLog, Display, TEXT("Dest %s"), *dest.ToCompactString());
 	}
 
 	

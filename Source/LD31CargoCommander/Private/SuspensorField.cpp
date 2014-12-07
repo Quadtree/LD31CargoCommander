@@ -50,15 +50,15 @@ void ASuspensorField::Tick(float DeltaSeconds)
 
 			Destructible->GetBoneNames(bones);
 
-			for (auto i = bones.CreateIterator(); i; ++i)
+			for (auto j = bones.CreateIterator(); j; ++j)
 			{
-				FVector pos = Destructible->GetBoneLocation(*i);
+				FVector pos = Destructible->GetBoneLocation(*j);
 
 				FVector delta = pos - GetActorLocation();
 
 				if (delta.Size2D() < 900)
 				{
-					int32 chunkIdx = Destructible->BoneIdxToChunkIdx(Destructible->GetBoneIndex(*i));
+					int32 chunkIdx = Destructible->BoneIdxToChunkIdx(Destructible->GetBoneIndex(*j));
 					if (Destructible->ChunkInfos.Num() > chunkIdx && Destructible->ChunkInfos[chunkIdx].Actor)
 					{
 
@@ -80,6 +80,8 @@ void ASuspensorField::Tick(float DeltaSeconds)
 						movement *= 500;
 
 						Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(PxVec3(movement.X, movement.Y, movement.Z));
+
+						UE_LOG(LLog, Display, TEXT("Suspending %s"), *(i->GetName()));
 
 					}
 				}
