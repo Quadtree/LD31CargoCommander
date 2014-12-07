@@ -91,7 +91,7 @@ void ALD31CargoCommanderPawn::Tick(float DeltaSeconds)
 	rot.Pitch = 0;
 	rot.Roll = 0;
 	
-	ShipMeshComponent->SetPhysicsLinearVelocity(ShipMeshComponent->GetPhysicsLinearVelocity() * FVector(0.97f, 0.97f, 1.f));
+	//ShipMeshComponent->SetPhysicsLinearVelocity(ShipMeshComponent->GetPhysicsLinearVelocity() * FVector(0.97f, 0.97f, 1.f));
 	ShipMeshComponent->SetPhysicsAngularVelocity(FVector::ZeroVector);
 
 	if (!IsGrabbing && MoveDirection.SizeSquared() > 0.2f)
