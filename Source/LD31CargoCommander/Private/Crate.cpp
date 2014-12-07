@@ -23,9 +23,8 @@ void ACrate::Tick(float DeltaSeconds)
 
 	Destructible->GetBoneNames(bones);
 
-	for (auto i = bones.CreateIterator(); i; ++i){
-		//UE_LOG(LLog, Display, TEXT("TICK!!! %s %s"), *i->ToString(), *Destructible->GetBoneLocation(*i).ToCompactString());
-
+	for (auto i = bones.CreateIterator(); i; ++i)
+	{
 		FVector pos = Destructible->GetBoneLocation(*i);
 
 		int32 chunkIdx = Destructible->BoneIdxToChunkIdx(Destructible->GetBoneIndex(*i));
@@ -35,42 +34,15 @@ void ACrate::Tick(float DeltaSeconds)
 
 			if (pos.Y > -4700)
 			{
-				//PxVec3 vel = Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity();
-				//vel.z = 0;
-
-				//Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(vel);
-
-				//UE_LOG(LLog, Display, TEXT("pos! %s"), *pos.ToCompactString());
-
 				force.z = -980.f * DeltaSeconds;
 			}
-
-			
 
 			for (auto j = TActorIterator< ACrateMover >(GetWorld()); j; ++j)
 			{
 				force += physx::PxVec3(j->Movement.X * DeltaSeconds, j->Movement.Y * DeltaSeconds, j->Movement.Z * DeltaSeconds);
-
-				//UE_LOG(LLog, Display, TEXT("FOOORCE! %s %s %s"), *FString::SanitizeFloat(force.x), *FString::SanitizeFloat(force.y), *FString::SanitizeFloat(force.z));
-
-				/*FVector rotMove = pos;
-				rotMove = FRotator(0, 90, 0).RotateVector(rotMove);
-
-				rotMove *= j->Spin;
-
-				force += physx::PxVec3(rotMove.X * DeltaSeconds, rotMove.Y * DeltaSeconds, rotMove.Z * DeltaSeconds);*/
 			}
 
-			/*if (force.magnitude() > 0.001f)
-			{
-				if (Destructible->ChunkInfos[chunkIdx].Actor && Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity().magnitude() < 0.001f)
-				{
-					//UE_LOG(LLog, Display, TEXT("AWAKEN!!"));
-					Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(PxVec3(0, 0, 100.f));
-				}
-			}*/
-
-			//Destructible->ChunkInfos[chunkIdx].Actor->addForce(force, PxForceMode::eVELOCITY_CHANGE);
+			UE_LOG(LLog, Display, TEXT("FORCE %s %s %s"), *FString::SanitizeFloat(force.x), *FString::SanitizeFloat(force.y), *FString::SanitizeFloat(force.z));
 
 			Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity() + force);
 
@@ -81,17 +53,6 @@ void ACrate::Tick(float DeltaSeconds)
 			}
 		}
 	}
-
-	//Destructible->GetDestructibleMesh();
-
-	/*if (GetActorLocation().Y < -4700)
-	{
-		Destructible->SetEnableGravity(false);
-	}
-	else
-	{
-		Destructible->SetEnableGravity(true);
-	}*/
 }
 
 int32 ACrate::GetValue()
