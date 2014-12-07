@@ -40,7 +40,7 @@ void ACrate::Tick(float DeltaSeconds)
 
 				Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(vel);
 
-				UE_LOG(LLog, Display, TEXT("pos! %s"), *pos.ToCompactString());
+				//UE_LOG(LLog, Display, TEXT("pos! %s"), *pos.ToCompactString());
 			}
 
 			
@@ -61,7 +61,7 @@ void ACrate::Tick(float DeltaSeconds)
 
 			if (force.magnitude() > 0.001f)
 			{
-				if (Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity().magnitude() < 0.001f)
+				if (Destructible->ChunkInfos[chunkIdx].Actor && Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity().magnitude() < 0.001f)
 				{
 					//UE_LOG(LLog, Display, TEXT("AWAKEN!!"));
 					Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(PxVec3(0, 0, 100.f));
@@ -70,20 +70,24 @@ void ACrate::Tick(float DeltaSeconds)
 
 			Destructible->ChunkInfos[chunkIdx].Actor->addForce(force, PxForceMode::eVELOCITY_CHANGE);
 
-			if (pos.Y < -10000) Destroy();
+			if (pos.Y < -10000)
+			{
+				Destroy();
+				return;
+			}
 		}
 	}
 
 	Destructible->GetDestructibleMesh();
 
-	if (GetActorLocation().Y < -4700)
+	/*if (GetActorLocation().Y < -4700)
 	{
 		Destructible->SetEnableGravity(false);
 	}
 	else
 	{
 		Destructible->SetEnableGravity(true);
-	}
+	}*/
 }
 
 int32 ACrate::GetValue()
@@ -103,7 +107,7 @@ int32 ACrate::GetValue()
 		}
 	}
 
-	UE_LOG(LLog, Display, TEXT("N %s"), *FString::FromInt(pieces));
+	//UE_LOG(LLog, Display, TEXT("N %s"), *FString::FromInt(pieces));
 
 	return pieces == 2 ? CrateValue : 0;
 }

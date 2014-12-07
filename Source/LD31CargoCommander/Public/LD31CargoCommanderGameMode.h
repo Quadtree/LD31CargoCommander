@@ -15,6 +15,26 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Status)
 	float TimeLeft;
+
+	virtual void Tick(float DeltaSeconds) override;
+
+	UPROPERTY(EditAnywhere, Category = Hazards)
+	float AvgTimeBetweenHazards;
+
+	UPROPERTY(EditAnywhere, Category = Hazards)
+	float HazardSpinPower;
+
+	UPROPERTY(EditAnywhere, Category = Hazards)
+	float HazardPushPower;
+
+	float TimeToNextHazard;
+
+	bool HasDoneAcceleration;
+
+	UPROPERTY(EditAnywhere, Category = Hazards)
+	float AvgHazardDuration;
+
+	TArray<FString> Messages;
 };
 
 
