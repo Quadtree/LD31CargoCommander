@@ -39,13 +39,15 @@ void ACrate::Tick(float DeltaSeconds)
 				vel.z = 0;
 
 				Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(vel);
+
+				UE_LOG(LLog, Display, TEXT("pos! %s"), *pos.ToCompactString());
 			}
 
 			for (auto j = TActorIterator< ACrateMover >(GetWorld()); j; ++j)
 			{
 				force += physx::PxVec3(j->Movement.X * DeltaSeconds, j->Movement.Y * DeltaSeconds, j->Movement.Z * DeltaSeconds);
 
-				UE_LOG(LLog, Display, TEXT("FOOORCE! %s %s %s"), *FString::SanitizeFloat(force.x), *FString::SanitizeFloat(force.y), *FString::SanitizeFloat(force.z));
+				//UE_LOG(LLog, Display, TEXT("FOOORCE! %s %s %s"), *FString::SanitizeFloat(force.x), *FString::SanitizeFloat(force.y), *FString::SanitizeFloat(force.z));
 
 				FVector rotMove = pos;
 				rotMove = FRotator(0, 90, 0).RotateVector(rotMove);
@@ -59,7 +61,7 @@ void ACrate::Tick(float DeltaSeconds)
 			{
 				if (Destructible->ChunkInfos[chunkIdx].Actor->getLinearVelocity().magnitude() < 0.001f)
 				{
-					UE_LOG(LLog, Display, TEXT("AWAKEN!!"));
+					//UE_LOG(LLog, Display, TEXT("AWAKEN!!"));
 					Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(PxVec3(0, 0, 100.f));
 				}
 			}

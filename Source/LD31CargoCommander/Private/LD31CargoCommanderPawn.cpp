@@ -106,9 +106,9 @@ void ALD31CargoCommanderPawn::Tick(float DeltaSeconds)
 
 		if (FVector::DotProduct(MoveDirection, curVector) < 0.98f){
 			if (dp > 0)
-				rot.Yaw += DeltaSeconds * 500;
+				rot.Yaw += DeltaSeconds * 200;
 			else
-				rot.Yaw -= DeltaSeconds * 500;
+				rot.Yaw -= DeltaSeconds * 200;
 		}
 		else
 		{
