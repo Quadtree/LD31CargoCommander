@@ -81,7 +81,7 @@ void ASuspensorField::Tick(float DeltaSeconds)
 
 						Destructible->ChunkInfos[chunkIdx].Actor->setLinearVelocity(PxVec3(movement.X, movement.Y, movement.Z));
 
-						UE_LOG(LLog, Display, TEXT("Suspending %s"), *(i->GetName()));
+						//UE_LOG(LLog, Display, TEXT("Suspending %s"), *(i->GetName()));
 
 					}
 				}

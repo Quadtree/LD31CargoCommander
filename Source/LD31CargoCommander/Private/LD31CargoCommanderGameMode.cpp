@@ -56,7 +56,7 @@ void ALD31CargoCommanderGameMode::Tick(float DeltaSeconds)
 				cm->Movement.Normalize();
 				cm->Movement *= HazardPushPower;
 
-				cm->LifeSpan = AvgHazardDuration * FMath::RandRange(0.5f, 1.5f);
+				cm->LifeSpan = AvgHazardDuration * FMath::FRandRange(0.5f, 1.5f);
 
 				UE_LOG(LLog, Display, TEXT("SPIN %s MOVE %s"), *FString::SanitizeFloat(cm->Spin), *cm->Movement.ToCompactString())
 			}
