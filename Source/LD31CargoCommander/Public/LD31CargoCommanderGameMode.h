@@ -37,6 +37,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = Game)
 	bool GameRunning;
 
+	UFUNCTION(BlueprintImplementableEvent, Category = Game)
+	void OnRunEnded();
+
 	TArray<FString> Messages;
 };
 
