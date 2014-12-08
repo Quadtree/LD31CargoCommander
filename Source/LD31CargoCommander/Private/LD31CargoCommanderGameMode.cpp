@@ -69,3 +69,12 @@ void ALD31CargoCommanderGameMode::Tick(float DeltaSeconds)
 
 	
 }
+
+void ALD31CargoCommanderGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	UE_LOG(LLog, Display, TEXT("Play beginning, seeding RNG"));
+
+	FMath::RandInit(FDateTime::UtcNow().ToUnixTimestamp());
+}

@@ -40,6 +40,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = Game)
 	void OnRunEnded();
 
+	virtual void BeginPlay() override;
+
 	TArray<FString> Messages;
 };
 
